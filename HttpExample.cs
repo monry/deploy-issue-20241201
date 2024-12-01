@@ -3,7 +3,8 @@ using Microsoft.Extensions.Logging;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
-namespace deploy_issue_20241201
+// ReSharper disable once CheckNamespace
+namespace DeployIssue20241201
 {
     public class HttpExample
     {
