@@ -53,7 +53,7 @@ jobs:
         id: deploy-to-webapp
         uses: azure/webapps-deploy@v2
         with:
-          app-name: ${{ vars.FUNCTIONS_APP_NAME_PREFIX }}01
+          app-name: ${{ vars.FUNCTIONSAPP_NAME_PREFIX }}01
           publish-profile: ${{ secrets.AZURE_FUNCTIONSAPP_PUBLISH_PROFILE_01 }}
           images: ${{ env.DOCKER_REGISTRY }}/${{ env.DOCKER_REPOSITORY }}:${{ env.CURRENT_DATETIME }}
 
