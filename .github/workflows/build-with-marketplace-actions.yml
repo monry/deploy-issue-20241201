@@ -48,7 +48,7 @@ jobs:
           context: .
           file: ./Dockerfile
           push: true
-          tags: ${{ env.DOCKER_REGISTRY }}/${{ env.DOCKER_REPOSITORY }}:${{ env.CURRENT_DATETIME }}
+          tags: ${{ env.DOCKER_REGISTRY }}/${{ env.DOCKER_REPOSITORY }}:${{ env.CURRENT_DATETIME }}-marketplace
           build-args: BUILD_TIMESTAMP=${{ env.CURRENT_TIMESTAMP }}
 
       - name: Deploy to Azure Functions App
@@ -57,7 +57,7 @@ jobs:
         with:
           app-name: ${{ vars.FUNCTIONSAPP_NAME_PREFIX }}03
           publish-profile: ${{ secrets.AZURE_FUNCTIONSAPP_PUBLISH_PROFILE_03 }}
-          images: ${{ env.DOCKER_REGISTRY }}/${{ env.DOCKER_REPOSITORY }}:${{ env.CURRENT_DATETIME }}
+          images: ${{ env.DOCKER_REGISTRY }}/${{ env.DOCKER_REPOSITORY }}:${{ env.CURRENT_DATETIME }}-marketplace
 
       - name: Close Port for Container Registry
         run: |
