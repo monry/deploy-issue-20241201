@@ -41,12 +41,12 @@ jobs:
 
       - name: Docker Build
         run: |
-          docker build -t ${{ env.DOCKER_REGISTRY }}/${{ env.DOCKER_REPOSITORY }}:${{ env.CURRENT_DATETIME }} --build-arg "BUILD_TIMESTAMP=${{ env.CURRENT_TIMESTAMP }}" .
+          docker build -t ${{ env.DOCKER_REGISTRY }}/${{ env.DOCKER_REPOSITORY }}:${{ env.CURRENT_DATETIME }}-plain --build-arg "BUILD_TIMESTAMP=${{ env.CURRENT_TIMESTAMP }}" .
         shell: bash
 
       - name: Docker Push
         run: |
-          docker push ${{ env.DOCKER_REGISTRY }}/${{ env.DOCKER_REPOSITORY }}:${{ env.CURRENT_DATETIME }}
+          docker push ${{ env.DOCKER_REGISTRY }}/${{ env.DOCKER_REPOSITORY }}:${{ env.CURRENT_DATETIME }}-plain
         shell: bash
 
       - name: Deploy to Azure Functions App
@@ -55,7 +55,7 @@ jobs:
         with:
           app-name: ${{ vars.FUNCTIONSAPP_NAME_PREFIX }}01
           publish-profile: ${{ secrets.AZURE_FUNCTIONSAPP_PUBLISH_PROFILE_01 }}
-          images: ${{ env.DOCKER_REGISTRY }}/${{ env.DOCKER_REPOSITORY }}:${{ env.CURRENT_DATETIME }}
+          images: ${{ env.DOCKER_REGISTRY }}/${{ env.DOCKER_REPOSITORY }}:${{ env.CURRENT_DATETIME }}-plain
 
       - name: Close Port for Container Registry
         run: |
