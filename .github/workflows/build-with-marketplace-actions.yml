@@ -49,7 +49,7 @@ jobs:
           file: ./Dockerfile
           push: true
           tags:
-            - ${{ env.DOCKER_REGISTRY }}/${{ env.DOCKER_REPOSITORY }}:${{ env.CURRENT_DATETIME }}
+            - '${{ env.DOCKER_REGISTRY }}/${{ env.DOCKER_REPOSITORY }}:${{ env.CURRENT_DATETIME }}'
           build-args:
             - BUILD_TIMESTAMP=${{ env.CURRENT_TIMESTAMP }}
 
