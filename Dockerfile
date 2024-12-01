@@ -13,3 +13,4 @@ ENV AzureWebJobsScriptRoot=/home/site/wwwroot \
     AzureFunctionsJobHost__Logging__Console__IsEnabled=true
 
 COPY --from=installer-env ["/home/site/wwwroot", "/home/site/wwwroot"]
+RUN echo $BUILD_TIMESTAMP > /home/site/wwwroot/BUILD_TIMESTAMP
