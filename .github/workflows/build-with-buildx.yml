@@ -1,4 +1,4 @@
-name: Build with Marketplace Actions
+name: Build with docker buildx
 
 on:
   workflow_dispatch:

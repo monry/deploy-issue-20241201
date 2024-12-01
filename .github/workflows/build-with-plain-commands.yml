@@ -1,4 +1,4 @@
-name: Build with Commands
+name: Build with Plain Commands
 
 on:
   workflow_dispatch:
