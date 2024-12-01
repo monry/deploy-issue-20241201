@@ -1,0 +1,9 @@
+{
+  "profiles": {
+    "deploy_issue_20241201": {
+      "commandName": "Project",
+      "commandLineArgs": "--port 7270",
+      "launchBrowser": false
+    }
+  }
+}
