@@ -1,0 +1,21 @@
+name: Setup Environment Variables
+description: "環境変数をセットアップします"
+
+inputs:
+  container_registry_name:
+    description: "Azure Container Registry Name"
+    required: true
+
+runs:
+  using: "composite"
+  steps:
+    - name: "Setup Environment Variables"
+      run: |
+        echo "Setting up environment variables..."
+        echo "CURRENT_TIMESTAMP=$(date +'%s%3N')" >> $GITHUB_ENV
+        echo "CURRENT_DATETIME=$(date +'%Y%m%d%H%M%S')" >> $GITHUB_ENV
+        echo "IP_ADDRESS=$(curl -s https://checkip.amazonaws.com/)" >> $GITHUB_ENV
+        echo "DOCKER_REGISTRY=${{ inputs.container_registry_name }}.azurecr.io" >> $GITHUB_ENV
+        echo "DOCKER_REPOSITORY=${{ inputs.container_registry_name }}/demo" >> $GITHUB_ENV
+        echo "Environment variables have been set up."
+      shell: bash
