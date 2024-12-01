@@ -16,7 +16,7 @@ namespace DeployIssue20241201
         }
 
         [Function("HttpExample")]
-        public IActionResult Run([HttpTrigger(AuthorizationLevel.Function, "get", "post")] HttpRequest req)
+        public IActionResult Run([HttpTrigger(AuthorizationLevel.Anonymous, "get", "post")] HttpRequest req)
         {
             var buildTimestampString = Environment.GetEnvironmentVariable("BUILD_TIMESTAMP");
             if (File.Exists("BUILD_TIMESTAMP"))
