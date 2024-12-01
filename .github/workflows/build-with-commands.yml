@@ -1,0 +1,62 @@
+name: Build with Commands
+
+on:
+  workflow_dispatch:
+
+permissions:
+  id-token: write
+  contents: read
+
+jobs:
+  build-push-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Environment Variables
+        uses: ./actions/setup-environment-variables
+        with:
+          container_registry_name: ${{ vars.CONTAINER_REGISTRY_NAME }}
+
+      - name: Azure Login
+        uses: azure/login@v1
+        with:
+          client-id: ${{ secrets.AZURE_CLIENT_ID }}
+          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+
+      - name: Open Port for Container Registry
+        run: |
+          if [ -z "$(az acr network-rule list --name ${{ vars.CONTAINER_REGISTRY_NAME }} | jq '.ipRules[] | select(.ipAddressOrRange == "${{ env.IP_ADDRESS }}")')" ]; then
+            az acr network-rule add --resource-group ${{ vars.RESOURCE_GROUP_NAME }} --name ${{ vars.CONTAINER_REGISTRY_NAME }} --ip-address ${{ env.IP_ADDRESS }}
+          fi
+        shell: bash
+
+      - name: Login to Container Registry
+        run: |
+          az acr login --name ${{ vars.CONTAINER_REGISTRY_NAME }}
+        shell: bash
+
+      - name: Docker Build
+        run: |
+          docker build -t ${{ env.DOCKER_REGISTRY }}/${{ env.DOCKER_REPOSITORY }}:${{ env.CURRENT_DATETIME }} --build-arg "BUILD_TIMESTAMP=${{ env.CURRENT_TIMESTAMP }}" .
+        shell: bash
+
+      - name: Docker Push
+        run: |
+          docker push ${{ env.DOCKER_REGISTRY }}/${{ env.DOCKER_REPOSITORY }}:${{ env.CURRENT_DATETIME }}
+        shell: bash
+
+      - name: Deploy to Azure Functions App
+        id: deploy-to-webapp
+        uses: azure/webapps-deploy@v2
+        with:
+          app-name: ${{ vars.FUNCTIONS_APP_NAME_PREFIX }}01
+          publish-profile: ${{ secrets.AZURE_FUNCTIONSAPP_PUBLISH_PROFILE_01 }}
+          images: ${{ env.DOCKER_REGISTRY }}/${{ env.DOCKER_REPOSITORY }}:${{ env.CURRENT_DATETIME }}
+
+      - name: Close Port for Container Registry
+        run: |
+          az acr network-rule remove --resource-group ${{ vars.RESOURCE_GROUP_NAME }} --name ${{ vars.CONTAINER_REGISTRY_NAME }} --ip-address ${{ env.IP_ADDRESS }}
+        shell: bash
